@@ -1,0 +1,405 @@
+.garden-view {
+  min-height: 100vh;
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+}
+
+/* Header */
+.garden-header {
+  margin-bottom: 2rem;
+  animation: fade-up 0.4s ease-out;
+}
+
+.garden-title-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0;
+}
+
+.garden-title-icon {
+  font-size: 2.5rem;
+}
+
+.garden-title-section h1 {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--text-light);
+  text-shadow: 3px 3px 0 var(--dirt-dark);
+  margin: 0;
+}
+
+.garden-progress {
+  margin-top: 0.5rem;
+}
+
+.progress-text {
+  color: var(--text-light);
+  font-weight: 700;
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+.progress-bar {
+  margin-top: 0.5rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  background: linear-gradient(90deg, var(--star-yellow) 0%, #FFA500 100%);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease-out;
+}
+
+/* Status Legend */
+.status-legend {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: var(--text-light);
+  font-size: 0.85rem;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+/* Tasks List */
+.tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fade-up 0.4s ease-out 0.1s both;
+}
+
+/* Task Item */
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  transition: all 0.3s ease;
+}
+
+.task-item:hover {
+  background: linear-gradient(145deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(5px);
+}
+
+/* Status-specific styles */
+.task-item.status-unwhacked {
+  border-left: 4px solid #FF6B6B;
+}
+
+.task-item.status-in-whacking {
+  border-left: 4px solid var(--star-yellow);
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.15) 0%, rgba(255, 215, 0, 0.05) 100%);
+}
+
+.task-item.status-whacked {
+  opacity: 0.75;
+  background: linear-gradient(145deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.1) 100%);
+  border-left: 4px solid var(--grass-main);
+}
+
+.task-status-icon {
+  flex-shrink: 0;
+  padding: 0.25rem;
+}
+
+.task-mole {
+  font-size: 2rem;
+  display: block;
+}
+
+.task-item.status-in-whacking .task-mole {
+  animation: whacking 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes whacking {
+  from { transform: rotate(-15deg); }
+  to { transform: rotate(15deg); }
+}
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.task-name {
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text-light);
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.task-item.status-whacked .task-name {
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+/* Status Badge */
+.status-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.25rem 0.6rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-unwhacked {
+  background: rgba(255, 107, 107, 0.3);
+  color: #FFB4B4;
+}
+
+.status-badge.status-in-whacking {
+  background: rgba(255, 215, 0, 0.3);
+  color: #FFE566;
+}
+
+.status-badge.status-whacked {
+  background: rgba(76, 175, 80, 0.3);
+  color: #A5D6A7;
+}
+
+.task-description {
+  color: var(--text-light);
+  opacity: 0.8;
+  font-size: 0.9rem;
+  margin: 0.25rem 0 0 0;
+  word-wrap: break-word;
+}
+
+.task-item.status-whacked .task-description {
+  text-decoration: line-through;
+}
+
+/* Due Date */
+.task-due-date {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin: 0.5rem 0 0 0;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-light);
+}
+
+.task-due-date.overdue {
+  background: rgba(255, 107, 107, 0.3);
+  color: #FFB4B4;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.task-due-date.today {
+  background: rgba(255, 165, 0, 0.3);
+  color: #FFD699;
+}
+
+.task-due-date.soon {
+  background: rgba(255, 215, 0, 0.2);
+  color: #FFE566;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Edit Button */
+.task-edit {
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.task-edit:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+.task-edit:active {
+  transform: scale(0.95);
+}
+
+/* Empty Garden */
+.empty-garden {
+  text-align: center;
+  padding: 3rem 1rem;
+  animation: fade-up 0.4s ease-out;
+}
+
+.empty-icon {
+  font-size: 4rem;
+  animation: sway 3s ease-in-out infinite;
+}
+
+@keyframes sway {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.empty-garden h2 {
+  font-family: 'Lilita One', cursive;
+  color: var(--text-light);
+  text-shadow: 2px 2px 0 var(--dirt-dark);
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-garden p {
+  color: var(--text-light);
+  opacity: 0.9;
+}
+
+/* Add Task FAB */
+.add-task-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--grass-main) 0%, var(--grass-dark) 100%);
+  color: var(--text-light);
+  border: none;
+  border-radius: 50px;
+  padding: 1rem 1.5rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 
+    0 6px 0 var(--grass-deep),
+    0 10px 30px rgba(0, 0, 0, 0.3);
+  transition: all 0.2s;
+  z-index: 100;
+}
+
+.add-task-fab:hover {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 9px 0 var(--grass-deep),
+    0 15px 35px rgba(0, 0, 0, 0.35);
+}
+
+.add-task-fab:active {
+  transform: translateY(3px);
+  box-shadow: 
+    0 3px 0 var(--grass-deep),
+    0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* All Done Celebration */
+.all-done {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 2rem;
+  background: linear-gradient(145deg, rgba(255, 215, 0, 0.2) 0%, rgba(255, 165, 0, 0.1) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.4);
+  border-radius: 20px;
+  animation: celebrate 0.5s ease-out;
+}
+
+@keyframes celebrate {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.celebration {
+  font-size: 3rem;
+  display: block;
+  animation: bounce 1s ease-in-out infinite;
+}
+
+.all-done p {
+  color: var(--text-light);
+  font-weight: 700;
+  margin: 0.5rem 0 0 0;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .garden-view {
+    padding: 1rem;
+    padding-bottom: 120px;
+  }
+  
+  .task-item {
+    padding: 0.875rem 1rem;
+  }
+  
+  .task-mole {
+    font-size: 1.75rem;
+  }
+  
+  .add-task-fab {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.875rem 1.25rem;
+  }
+
+  .status-legend {
+    gap: 0.5rem;
+  }
+
+  .legend-item {
+    font-size: 0.75rem;
+  }
+}

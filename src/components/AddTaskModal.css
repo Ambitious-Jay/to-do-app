@@ -1,0 +1,101 @@
+.add-task-modal {
+  max-width: 500px;
+}
+
+.add-task-modal textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  border: 3px solid var(--dirt-dark);
+  border-radius: 12px;
+  background: var(--text-light);
+  color: var(--text-dark);
+  transition: all 0.2s;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.add-task-modal textarea:focus {
+  outline: none;
+  border-color: var(--grass-main);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.add-task-modal textarea::placeholder {
+  color: var(--dirt-light);
+  font-weight: 500;
+}
+
+.add-task-modal textarea:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Date Input */
+.date-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  border: 3px solid var(--dirt-dark);
+  border-radius: 12px;
+  background: var(--text-light);
+  color: var(--text-dark);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--grass-main);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.date-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* New Garden Input Group */
+.new-garden-group {
+  animation: slide-down 0.3s ease-out;
+  background: rgba(76, 175, 80, 0.15);
+  margin: -0.5rem -1rem 1.25rem -1rem;
+  padding: 1rem;
+  border-radius: 12px;
+  border: 2px dashed var(--grass-main);
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.new-garden-group input {
+  border-color: var(--grass-main) !important;
+  background: var(--text-light);
+}
+
+.new-garden-group input:focus {
+  border-color: var(--star-yellow) !important;
+}
+
+.new-garden-group label {
+  color: var(--grass-light) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.new-garden-group label::before {
+  content: '🌱';
+}

@@ -1,0 +1,290 @@
+.tasks-page {
+  min-height: 100vh;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.tasks-header {
+  margin-bottom: 2rem;
+  animation: fade-up 0.4s ease-out;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-light);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateX(-5px);
+}
+
+.tasks-title h1 {
+  font-family: 'Lilita One', cursive;
+  font-size: clamp(2rem, 6vw, 3rem);
+  color: var(--text-light);
+  text-shadow: 3px 3px 0 var(--dirt-dark);
+  margin: 0;
+}
+
+.tasks-subtitle {
+  color: var(--text-light);
+  opacity: 0.9;
+  font-weight: 600;
+  margin: 0.25rem 0 0 0;
+}
+
+.tasks-hint {
+  color: var(--text-light);
+  opacity: 0.75;
+  font-size: 0.9rem;
+  margin: 0.75rem 0 0 0;
+  font-style: italic;
+}
+
+/* Gardens Grid */
+.gardens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  animation: fade-up 0.4s ease-out 0.1s both;
+}
+
+/* Garden Card */
+.garden-card {
+  background: linear-gradient(145deg, var(--grass-main) 0%, var(--grass-dark) 100%);
+  border-radius: 20px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 
+    0 8px 0 var(--grass-deep),
+    0 12px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.garden-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.garden-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 12px 0 var(--grass-deep),
+    0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.garden-card:active {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 4px 0 var(--grass-deep),
+    0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.delete-garden-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  color: var(--text-light);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.garden-card:hover .delete-garden-btn {
+  opacity: 1;
+}
+
+.delete-garden-btn:hover {
+  background: var(--mole-nose);
+  transform: scale(1.1);
+}
+
+.garden-icon {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+}
+
+.garden-name {
+  font-family: 'Lilita One', cursive;
+  font-size: 1.5rem;
+  color: var(--text-light);
+  text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  margin: 0 0 0.5rem 0;
+}
+
+.garden-stats {
+  margin-bottom: 0.75rem;
+}
+
+.task-count {
+  color: var(--text-light);
+  opacity: 0.9;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.garden-progress-bar {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.garden-progress-fill {
+  background: linear-gradient(90deg, var(--star-yellow) 0%, #FFA500 100%);
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.5s ease-out;
+}
+
+.garden-moles {
+  display: flex;
+  gap: 0.25rem;
+  align-items: center;
+}
+
+.mini-mole {
+  font-size: 1.25rem;
+  transition: transform 0.2s;
+}
+
+.mini-mole.whacked {
+  opacity: 0.7;
+}
+
+.more-moles {
+  background: rgba(0, 0, 0, 0.2);
+  color: var(--text-light);
+  padding: 0.2rem 0.5rem;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* Add Garden Card */
+.add-garden-card {
+  background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
+  border: 3px dashed rgba(255, 255, 255, 0.4);
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.add-garden-card:hover {
+  background: linear-gradient(145deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+.add-garden-card .garden-icon {
+  opacity: 0.8;
+  animation: peek-mole 2s ease-in-out infinite;
+}
+
+@keyframes peek-mole {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.add-garden-card .garden-name {
+  text-shadow: none;
+  opacity: 0.9;
+}
+
+.add-garden-hint {
+  color: var(--text-light);
+  opacity: 0.7;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  animation: fade-up 0.4s ease-out 0.2s both;
+}
+
+.empty-mole {
+  font-size: 5rem;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.empty-state h2 {
+  font-family: 'Lilita One', cursive;
+  color: var(--text-light);
+  text-shadow: 2px 2px 0 var(--dirt-dark);
+  margin: 1rem 0 0.5rem;
+}
+
+.empty-state p {
+  color: var(--text-light);
+  opacity: 0.9;
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .tasks-page {
+    padding: 1rem;
+  }
+  
+  .gardens-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .garden-card {
+    padding: 1.25rem;
+  }
+}

@@ -5,10 +5,17 @@ import {
   signOut, 
   onAuthStateChanged 
 } from 'firebase/auth';
-import { doc, setDoc, getDoc, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 
 const AuthContext = createContext();
+
+// Task status constants
+export const TASK_STATUS = {
+  UNWHACKED: 'unwhacked',
+  IN_WHACKING: 'in-whacking',
+  WHACKED: 'whacked'
+};
 
 export function useAuth() {
   return useContext(AuthContext);
@@ -24,26 +31,21 @@ export function AuthProvider({ children }) {
   async function signup(email, password, username) {
     try {
       setError('');
-      // Create the user in Firebase Auth
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       
-      // Create a document in the ToDoLists collection with username as document ID
       const userProfileData = {
         email: email,
         username: username,
-        tasks: []
+        gardens: []
       };
       
       await setDoc(doc(db, 'ToDoLists', username), userProfileData);
 
-      // Store username mapping for easy lookup
       await setDoc(doc(db, 'UserMappings', userCredential.user.uid), {
         username: username
       });
 
-      // Immediately set the user profile so UI updates right away
       setUserProfile(userProfileData);
-
       return userCredential;
     } catch (err) {
       setError(getErrorMessage(err.code));
@@ -58,9 +60,7 @@ export function AuthProvider({ children }) {
       
       let email = emailOrUsername;
       
-      // Check if the input is a username (doesn't contain @)
       if (!emailOrUsername.includes('@')) {
-        // Look up the email from the ToDoLists collection by username
         const userDoc = await getDoc(doc(db, 'ToDoLists', emailOrUsername));
         
         if (!userDoc.exists()) {
@@ -72,8 +72,6 @@ export function AuthProvider({ children }) {
       }
       
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      
-      // Fetch and set the user profile immediately after login
       await fetchUserProfile(userCredential.user.uid);
       
       return userCredential;
@@ -100,14 +98,62 @@ export function AuthProvider({ children }) {
   // Fetch user profile from Firestore
   async function fetchUserProfile(uid) {
     try {
-      // First get the username from UserMappings
       const mappingDoc = await getDoc(doc(db, 'UserMappings', uid));
       if (mappingDoc.exists()) {
         const username = mappingDoc.data().username;
-        // Then get the full profile from ToDoLists
         const profileDoc = await getDoc(doc(db, 'ToDoLists', username));
         if (profileDoc.exists()) {
-          const profileData = profileDoc.data();
+          let profileData = profileDoc.data();
+          
+          // Migration: Convert old tasks array to gardens if needed
+          if (profileData.tasks && !profileData.gardens) {
+            profileData.gardens = [];
+            await updateDoc(doc(db, 'ToDoLists', username), {
+              gardens: [],
+              tasks: []
+            });
+          }
+          
+          // Ensure gardens exists
+          if (!profileData.gardens) {
+            profileData.gardens = [];
+          }
+          
+          // Migration: Ensure all tasks have required fields
+          let needsMigration = false;
+          profileData.gardens = profileData.gardens.map(garden => ({
+            ...garden,
+            tasks: garden.tasks.map(task => {
+              let updatedTask = { ...task };
+              
+              // Convert old completed boolean to status
+              if (task.completed !== undefined && !task.status) {
+                needsMigration = true;
+                updatedTask.status = task.completed ? TASK_STATUS.WHACKED : TASK_STATUS.UNWHACKED;
+              }
+              
+              // Ensure status exists
+              if (!updatedTask.status) {
+                needsMigration = true;
+                updatedTask.status = TASK_STATUS.UNWHACKED;
+              }
+              
+              // Ensure dueDate exists (null is fine)
+              if (updatedTask.dueDate === undefined) {
+                needsMigration = true;
+                updatedTask.dueDate = null;
+              }
+              
+              return updatedTask;
+            })
+          }));
+          
+          if (needsMigration) {
+            await updateDoc(doc(db, 'ToDoLists', username), {
+              gardens: profileData.gardens
+            });
+          }
+          
           setUserProfile(profileData);
           return profileData;
         }
@@ -116,6 +162,162 @@ export function AuthProvider({ children }) {
     } catch (err) {
       console.error('Error fetching user profile:', err);
       return null;
+    }
+  }
+
+  // Add a new garden (returns updated gardens array)
+  async function addGarden(gardenName) {
+    if (!userProfile) return null;
+    
+    try {
+      const newGarden = {
+        name: gardenName,
+        tasks: []
+      };
+      
+      const updatedGardens = [...(userProfile.gardens || []), newGarden];
+      
+      await updateDoc(doc(db, 'ToDoLists', userProfile.username), {
+        gardens: updatedGardens
+      });
+      
+      setUserProfile(prev => ({
+        ...prev,
+        gardens: updatedGardens
+      }));
+      
+      return updatedGardens;
+    } catch (err) {
+      console.error('Error adding garden:', err);
+      throw err;
+    }
+  }
+
+  // Add a task to a garden (with optional gardens array override)
+  async function addTask(gardenName, taskName, taskDescription, dueDate = null, gardensOverride = null) {
+    if (!userProfile) return;
+    
+    try {
+      const newTask = {
+        id: Date.now().toString(),
+        name: taskName,
+        description: taskDescription,
+        status: TASK_STATUS.UNWHACKED,
+        dueDate: dueDate,
+        createdAt: new Date().toISOString()
+      };
+      
+      const currentGardens = gardensOverride || userProfile.gardens || [];
+      
+      const updatedGardens = currentGardens.map(garden => {
+        if (garden.name === gardenName) {
+          return {
+            ...garden,
+            tasks: [...garden.tasks, newTask]
+          };
+        }
+        return garden;
+      });
+      
+      await updateDoc(doc(db, 'ToDoLists', userProfile.username), {
+        gardens: updatedGardens
+      });
+      
+      setUserProfile(prev => ({
+        ...prev,
+        gardens: updatedGardens
+      }));
+      
+      return newTask;
+    } catch (err) {
+      console.error('Error adding task:', err);
+      throw err;
+    }
+  }
+
+  // Update a task (for editing)
+  async function updateTask(gardenName, taskId, updates) {
+    if (!userProfile) return;
+    
+    try {
+      const updatedGardens = (userProfile.gardens || []).map(garden => {
+        if (garden.name === gardenName) {
+          return {
+            ...garden,
+            tasks: garden.tasks.map(task => {
+              if (task.id === taskId) {
+                return { ...task, ...updates };
+              }
+              return task;
+            })
+          };
+        }
+        return garden;
+      });
+      
+      await updateDoc(doc(db, 'ToDoLists', userProfile.username), {
+        gardens: updatedGardens
+      });
+      
+      setUserProfile(prev => ({
+        ...prev,
+        gardens: updatedGardens
+      }));
+    } catch (err) {
+      console.error('Error updating task:', err);
+      throw err;
+    }
+  }
+
+  // Delete a task
+  async function deleteTask(gardenName, taskId) {
+    if (!userProfile) return;
+    
+    try {
+      const updatedGardens = (userProfile.gardens || []).map(garden => {
+        if (garden.name === gardenName) {
+          return {
+            ...garden,
+            tasks: garden.tasks.filter(task => task.id !== taskId)
+          };
+        }
+        return garden;
+      });
+      
+      await updateDoc(doc(db, 'ToDoLists', userProfile.username), {
+        gardens: updatedGardens
+      });
+      
+      setUserProfile(prev => ({
+        ...prev,
+        gardens: updatedGardens
+      }));
+    } catch (err) {
+      console.error('Error deleting task:', err);
+      throw err;
+    }
+  }
+
+  // Delete a garden
+  async function deleteGarden(gardenName) {
+    if (!userProfile) return;
+    
+    try {
+      const updatedGardens = (userProfile.gardens || []).filter(
+        garden => garden.name !== gardenName
+      );
+      
+      await updateDoc(doc(db, 'ToDoLists', userProfile.username), {
+        gardens: updatedGardens
+      });
+      
+      setUserProfile(prev => ({
+        ...prev,
+        gardens: updatedGardens
+      }));
+    } catch (err) {
+      console.error('Error deleting garden:', err);
+      throw err;
     }
   }
 
@@ -146,7 +348,6 @@ export function AuthProvider({ children }) {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user) {
-        // Only fetch if we don't already have the profile
         if (!userProfile) {
           await fetchUserProfile(user.uid);
         }
@@ -168,7 +369,12 @@ export function AuthProvider({ children }) {
     signup,
     login,
     logout,
-    fetchUserProfile
+    fetchUserProfile,
+    addGarden,
+    addTask,
+    updateTask,
+    deleteTask,
+    deleteGarden
   };
 
   return (

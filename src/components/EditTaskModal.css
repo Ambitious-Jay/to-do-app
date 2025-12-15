@@ -1,0 +1,183 @@
+.edit-task-modal {
+  max-width: 500px;
+}
+
+.edit-task-modal textarea {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  border: 3px solid var(--dirt-dark);
+  border-radius: 12px;
+  background: var(--text-light);
+  color: var(--text-dark);
+  transition: all 0.2s;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.edit-task-modal textarea:focus {
+  outline: none;
+  border-color: var(--grass-main);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.edit-task-modal textarea::placeholder {
+  color: var(--dirt-light);
+  font-weight: 500;
+}
+
+.edit-task-modal textarea:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Date Input */
+.date-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  border: 3px solid var(--dirt-dark);
+  border-radius: 12px;
+  background: var(--text-light);
+  color: var(--text-dark);
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.date-input:focus {
+  outline: none;
+  border-color: var(--grass-main);
+  box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.3);
+}
+
+.date-input:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Status Options */
+.status-options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-option {
+  flex: 1;
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.status-option:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.status-option.selected {
+  border-width: 3px;
+  transform: translateY(-2px);
+}
+
+.status-option.selected.status-unwhacked {
+  background: rgba(255, 107, 107, 0.3);
+  border-color: #FF6B6B;
+}
+
+.status-option.selected.status-in-whacking {
+  background: rgba(255, 215, 0, 0.3);
+  border-color: var(--star-yellow);
+}
+
+.status-option.selected.status-whacked {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: var(--grass-main);
+}
+
+.status-emoji {
+  font-size: 1.5rem;
+}
+
+.status-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+/* Button Row */
+.button-row {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.button-row .btn-submit {
+  flex: 1;
+}
+
+.btn-delete {
+  padding: 1rem 1.25rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: linear-gradient(135deg, #FF6B6B 0%, #ee5a5a 100%);
+  color: var(--text-light);
+  box-shadow: 
+    0 4px 0 #cc4545,
+    0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-delete:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #cc4545,
+    0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.btn-delete:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 
+    0 2px 0 #cc4545,
+    0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-delete:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .status-options {
+    flex-direction: column;
+  }
+  
+  .status-option {
+    flex-direction: row;
+    justify-content: center;
+    min-width: auto;
+  }
+  
+  .button-row {
+    flex-direction: column;
+  }
+}
+

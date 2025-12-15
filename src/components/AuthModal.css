@@ -49,14 +49,14 @@
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   background: var(--dirt-dark);
   border: none;
   color: var(--text-light);
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
+  font-size: 1.75rem;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
@@ -64,15 +64,19 @@
   justify-content: center;
   transition: all 0.2s;
   box-shadow: 0 3px 0 var(--dirt-deep);
+  /* Increase clickable area */
+  padding: 0;
+  line-height: 1;
 }
 
 .modal-close:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.05);
   box-shadow: 0 5px 0 var(--dirt-deep);
+  background: var(--mole-nose);
 }
 
 .modal-close:active {
-  transform: translateY(2px);
+  transform: translateY(2px) scale(0.95);
   box-shadow: 0 1px 0 var(--dirt-deep);
 }
 
