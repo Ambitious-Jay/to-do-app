@@ -1,0 +1,105 @@
+:root {
+  /* Grassy Greens */
+  --grass-light: #90EE90;
+  --grass-main: #4CAF50;
+  --grass-dark: #2E7D32;
+  --grass-deep: #1B5E20;
+  
+  /* Dirt Browns */
+  --dirt-light: #A1887F;
+  --dirt-main: #6D4C41;
+  --dirt-dark: #4E342E;
+  --dirt-deep: #3E2723;
+  
+  /* Accent Colors */
+  --mole-fur: #5D4037;
+  --mole-nose: #FF6B6B;
+  --hammer-wood: #DEB887;
+  --hammer-metal: #78909C;
+  --star-yellow: #FFD700;
+  
+  /* Text */
+  --text-light: #FAFAFA;
+  --text-dark: #3E2723;
+  
+  font-family: 'Nunito', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, 
+    #87CEEB 0%, 
+    #87CEEB 30%,
+    var(--grass-light) 30%,
+    var(--grass-main) 35%,
+    var(--grass-dark) 40%,
+    var(--dirt-light) 45%,
+    var(--dirt-main) 55%,
+    var(--dirt-dark) 75%,
+    var(--dirt-deep) 100%
+  );
+  background-attachment: fixed;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+/* Cloud animations in the sky */
+body::before,
+body::after {
+  content: '☁️';
+  position: fixed;
+  font-size: 4rem;
+  top: 5%;
+  opacity: 0.7;
+  animation: float-cloud 20s linear infinite;
+  z-index: 0;
+  pointer-events: none;
+}
+
+body::before {
+  left: -10%;
+  animation-delay: 0s;
+}
+
+body::after {
+  left: -10%;
+  top: 12%;
+  font-size: 3rem;
+  animation-delay: -10s;
+  animation-duration: 25s;
+}
+
+@keyframes float-cloud {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(100vw + 20%));
+  }
+}
+
+/* Grass blades decoration */
+@keyframes sway {
+  0%, 100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
